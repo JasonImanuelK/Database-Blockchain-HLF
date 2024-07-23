@@ -1,0 +1,136 @@
+test:
+  name: fabric_test
+  description: Benchmark for Fabric Test Network
+  workers:
+    number: 1
+  rounds:
+    - label: Batch Size 10 TpS 10 Payload Size 64 B
+      description: Batch Size 10 TpS 10 Payload Size 64 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 10
+          finishingTps: 10
+      workload:
+        module: workload-64.js
+    - label: Batch Size 10 TpS 10 Payload Size 256 B
+      description: Batch Size 10 TpS 10 Payload Size 256 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 10
+          finishingTps: 10
+      workload:
+        module: workload-256.js
+    - label: Batch Size 10 TpS 10 Payload Size 1024 B
+      description: Batch Size 10 TpS 10 Payload Size 1024 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 10
+          finishingTps: 10
+      workload:
+        module: workload-1024.js
+    - label: Batch Size 10 TpS 10 Payload Size 4096 B
+      description: Batch Size 10 TpS 10 Payload Size 4096 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 10
+          finishingTps: 10
+      workload:
+        module: workload-4096.js
+    - label: Batch Size 10 TpS 50 Payload Size 64 B
+      description: Batch Size 10 TpS 50 Payload Size 64 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 50
+          finishingTps: 50
+      workload:
+        module: workload-64-2.js
+    - label: Batch Size 10 TpS 50 Payload Size 256 B
+      description: Batch Size 10 TpS 50 Payload Size 256 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 50
+          finishingTps: 50
+      workload:
+        module: workload-256-2.js
+    - label: Batch Size 10 TpS 50 Payload Size 1024 B
+      description: Batch Size 10 TpS 50 Payload Size 1024 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 50
+          finishingTps: 50
+      workload:
+        module: workload-1024-2.js
+    - label: Batch Size 10 TpS 50 Payload Size 4096 B
+      description: Batch Size 10 TpS 50 Payload Size 4096 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 50
+          finishingTps: 50
+      workload:
+        module: workload-4096-2.js
+    - label: Batch Size 10 TpS 100 Payload Size 64 B
+      description: Batch Size 10 TpS 100 Payload Size 64 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 100
+          finishingTps: 100
+      workload:
+        module: workload-64-3.js
+    - label: Batch Size 10 TpS 100 Payload Size 256 B
+      description: Batch Size 10 TpS 100 Payload Size 256 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 100
+          finishingTps: 100
+      workload:
+        module: workload-256-3.js
+    - label: Batch Size 10 TpS 100 Payload Size 1024 B
+      description: Batch Size 10 TpS 100 Payload Size 1024 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 100
+          finishingTps: 100
+      workload:
+        module: workload-1024-3.js
+    - label: Batch Size 10 TpS 100 Payload Size 4096 B
+      description: Batch Size 10 TpS 100 Payload Size 4096 B
+      txNumber: 500
+      rateControl:
+        type: "linear-rate"
+        opts:
+          startingTps: 100
+          finishingTps: 100
+      workload:
+        module: workload-4096-3.js
+
+monitors:
+  resource:
+    - module: docker
+      options:
+        interval: 4
+        containers:
+          - "/peer0.org1.example.com"
+          - "/peer0.org2.example.com"
+          - "/orderer.example.com"

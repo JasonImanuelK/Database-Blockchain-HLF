@@ -1,0 +1,842 @@
+<!doctype html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+    function plotChart(divId, chartData) {
+        // Convert from stringified html, to valid JSON
+        const chartDetails = JSON.parse(chartData.replace(/&quot;/g,'"'));
+        new Chart(document.getElementById(divId), {
+            type: chartDetails.type,
+            data: {
+                labels: chartDetails.labels,
+                datasets: chartDetails.datasets
+            },
+            options: {
+                legend: { display: chartDetails.legend },
+                title: {
+                    display: true,
+                    text: chartDetails.title
+                }
+            }
+        });
+    }
+</script>
+<html>
+<head>
+    <title>Hyperledger Caliper Report</title>
+    <meta charset="UTF-8"/>
+    <style type="text/css">
+        .left-column {
+            position: fixed;
+            width:20%;
+        }
+        .left-column ul {
+            display: block;
+            padding: 0;
+            list-style: none;
+            border-bottom: 1px solid #d9d9d9;
+            font-size: 14px;
+        }
+        .left-column h2{
+            font-size: 24px;
+            font-weight: 400;
+            margin-block-end: 0.5em;
+        }
+        .left-column h3{
+            font-size: 18px;
+            font-weight: 400;
+            margin-block-end: 0.5em;
+        }
+        .left-column li{
+            margin-left: 10px;
+            margin-bottom: 5px;
+            color: #5e6b73;
+        }
+        .right-column {
+            margin-left: 22%;
+            width:60%;
+        }
+        .right-column table {
+            font-size:11px;
+            color:#333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .right-column h2{
+            font-weight: 400;
+        }
+        .right-column h3{
+            font-weight: 400;
+        }
+        .right-column h4 {
+            font-weight: 400;
+            margin-block-end: 0;
+        }
+        .right-column th {
+            border-width: 1px;
+            font-size: small;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #f2f2f2;
+        }
+        .right-column td {
+            border-width: 1px;
+            font-size: small;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+            font-weight: 400;
+        }
+        .tag {
+            margin-bottom: 10px;
+            padding: 5px 10px;
+        }
+        pre {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -khtml-border-radius: 5px;
+            overflow:auto;
+            max-height:300px;
+            font-size:12px;
+        }
+        .charting {
+            display:flex;
+            flex-direction:row;
+            flex-wrap: wrap;
+            page-break-inside: auto;
+        }
+        .chart {
+            display:flex;
+            flex:1;
+            max-width: 50%;
+        }
+    </style>
+</head>
+<body style="font-family: IBM Plex Sans; font-weight: 200;">
+    <main>
+        <div class="left-column">
+            <img src="https://hyperledger.github.io/caliper/assets/img/hyperledger_caliper_logo_color.png" style="width:95%;" alt="">
+            <ul>
+                <h3>&nbspBasic information</h3>
+                <li>DLT: &nbsp<span style="font-weight: 500;">fabric</span></li>
+                <li>Name: &nbsp<span style="font-weight: 500;">fabric_test</span></li>
+                <li>Description: &nbsp<span style="font-weight: 500;">Benchmark for Fabric Test Network</span></li>
+                <li>Benchmark Rounds: &nbsp<span style="font-weight: 500;">12</span></li>
+                <li><a href="#benchmarkInfo">Details</a></li>
+            </ul>
+            <ul>
+                <h3>&nbspBenchmark results</h3>
+                <li><a href="#benchmarksummary">Summary</a></li>
+                    <li><a href="#Batch Size 10 TpS 10 Payload Size 64 B">Batch Size 10 TpS 10 Payload Size 64 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 10 Payload Size 256 B">Batch Size 10 TpS 10 Payload Size 256 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 10 Payload Size 1024 B">Batch Size 10 TpS 10 Payload Size 1024 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 10 Payload Size 4096 B">Batch Size 10 TpS 10 Payload Size 4096 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 50 Payload Size 64 B">Batch Size 10 TpS 50 Payload Size 64 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 50 Payload Size 256 B">Batch Size 10 TpS 50 Payload Size 256 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 50 Payload Size 1024 B">Batch Size 10 TpS 50 Payload Size 1024 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 50 Payload Size 4096 B">Batch Size 10 TpS 50 Payload Size 4096 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 100 Payload Size 64 B">Batch Size 10 TpS 100 Payload Size 64 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 100 Payload Size 256 B">Batch Size 10 TpS 100 Payload Size 256 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 100 Payload Size 1024 B">Batch Size 10 TpS 100 Payload Size 1024 B</a></li>
+                    <li><a href="#Batch Size 10 TpS 100 Payload Size 4096 B">Batch Size 10 TpS 100 Payload Size 4096 B</a></li>
+            </ul>
+            <ul>
+                <h3>&nbspSystem under test</h3>
+                <li><a href="#sutdetails">Details</a></li>
+            </ul>
+        </div>
+
+        <div class="right-column">
+            <h1 style="padding-top: 3em; font-weight: 500;">Caliper report</h1>
+            <div style="border-bottom: 1px solid #d9d9d9; margin-bottom: 10px;" id="benchmarksummary">
+                <table style="min-width: 100%;">
+                    <h3>Summary of performance metrics</h3>
+                    <tr>
+                         <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                    </tr>
+
+                    <tr>
+                         <td>Batch Size 10 TpS 10 Payload Size 64 B</td> <td>500</td> <td>0</td> <td>6.9</td> <td>22.53</td> <td>0.16</td> <td>3.71</td> <td>6.5</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 10 Payload Size 256 B</td> <td>500</td> <td>0</td> <td>6.9</td> <td>4.50</td> <td>0.16</td> <td>1.98</td> <td>6.8</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 10 Payload Size 1024 B</td> <td>500</td> <td>0</td> <td>8.8</td> <td>2.72</td> <td>0.16</td> <td>1.02</td> <td>8.8</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 10 Payload Size 4096 B</td> <td>500</td> <td>0</td> <td>8.4</td> <td>3.44</td> <td>0.17</td> <td>1.36</td> <td>8.0</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 50 Payload Size 64 B</td> <td>500</td> <td>0</td> <td>21.5</td> <td>3.24</td> <td>0.36</td> <td>1.15</td> <td>21.0</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 50 Payload Size 256 B</td> <td>500</td> <td>0</td> <td>20.9</td> <td>6.99</td> <td>0.30</td> <td>1.95</td> <td>20.5</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 50 Payload Size 1024 B</td> <td>500</td> <td>0</td> <td>27.4</td> <td>1.45</td> <td>0.28</td> <td>0.69</td> <td>27.0</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 50 Payload Size 4096 B</td> <td>500</td> <td>0</td> <td>26.7</td> <td>3.42</td> <td>0.25</td> <td>1.19</td> <td>26.3</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 100 Payload Size 64 B</td> <td>500</td> <td>0</td> <td>26.4</td> <td>6.20</td> <td>0.88</td> <td>2.67</td> <td>23.6</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 100 Payload Size 256 B</td> <td>500</td> <td>0</td> <td>38.5</td> <td>1.11</td> <td>0.27</td> <td>0.66</td> <td>37.7</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 100 Payload Size 1024 B</td> <td>500</td> <td>0</td> <td>31.6</td> <td>6.19</td> <td>0.42</td> <td>2.45</td> <td>27.7</td>
+                    </tr>
+                    <tr>
+                         <td>Batch Size 10 TpS 100 Payload Size 4096 B</td> <td>500</td> <td>0</td> <td>35.2</td> <td>3.87</td> <td>0.59</td> <td>2.33</td> <td>32.1</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 10 Payload Size 64 B">
+                <h2>Benchmark round: Batch Size 10 TpS 10 Payload Size 64 B</h2>
+                <p>Batch Size 10 TpS 10 Payload Size 64 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 10
+    finishingTps: 10
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 10 Payload Size 64 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 10 Payload Size 64 B</td> <td>500</td> <td>0</td> <td>6.9</td> <td>22.53</td> <td>0.16</td> <td>3.71</td> <td>6.5</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 10 Payload Size 64 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>78.61</td> <td>17.78</td> <td>125</td> <td>115</td> <td>3.52</td> <td>2.15</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>120.07</td> <td>24.27</td> <td>138</td> <td>126</td> <td>3.51</td> <td>2.05</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>113.72</td> <td>14.41</td> <td>45.8</td> <td>39.1</td> <td>2.32</td> <td>4.45</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 10 Payload Size 256 B">
+                <h2>Benchmark round: Batch Size 10 TpS 10 Payload Size 256 B</h2>
+                <p>Batch Size 10 TpS 10 Payload Size 256 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 10
+    finishingTps: 10
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 10 Payload Size 256 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 10 Payload Size 256 B</td> <td>500</td> <td>0</td> <td>6.9</td> <td>4.50</td> <td>0.16</td> <td>1.98</td> <td>6.8</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 10 Payload Size 256 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>22.43</td> <td>14.59</td> <td>119</td> <td>115</td> <td>3.91</td> <td>2.38</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>38.57</td> <td>18.09</td> <td>126</td> <td>124</td> <td>3.90</td> <td>2.31</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>15.94</td> <td>7.52</td> <td>50.6</td> <td>47.6</td> <td>2.50</td> <td>4.80</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 10 Payload Size 1024 B">
+                <h2>Benchmark round: Batch Size 10 TpS 10 Payload Size 1024 B</h2>
+                <p>Batch Size 10 TpS 10 Payload Size 1024 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 10
+    finishingTps: 10
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 10 Payload Size 1024 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 10 Payload Size 1024 B</td> <td>500</td> <td>0</td> <td>8.8</td> <td>2.72</td> <td>0.16</td> <td>1.02</td> <td>8.8</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 10 Payload Size 1024 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>26.94</td> <td>14.53</td> <td>119</td> <td>119</td> <td>5.44</td> <td>3.56</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>25.68</td> <td>14.3</td> <td>123</td> <td>119</td> <td>5.43</td> <td>3.48</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>45.77</td> <td>9.5</td> <td>60.0</td> <td>55.1</td> <td>3.26</td> <td>6.31</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 10 Payload Size 4096 B">
+                <h2>Benchmark round: Batch Size 10 TpS 10 Payload Size 4096 B</h2>
+                <p>Batch Size 10 TpS 10 Payload Size 4096 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 10
+    finishingTps: 10
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 10 Payload Size 4096 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 10 Payload Size 4096 B</td> <td>500</td> <td>0</td> <td>8.4</td> <td>3.44</td> <td>0.17</td> <td>1.36</td> <td>8.0</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 10 Payload Size 4096 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>35.7</td> <td>20</td> <td>128</td> <td>126</td> <td>11.3</td> <td>7.97</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>39.21</td> <td>18.61</td> <td>126</td> <td>123</td> <td>11.3</td> <td>7.90</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>45.92</td> <td>10.09</td> <td>77.0</td> <td>69.5</td> <td>6.24</td> <td>12.2</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 50 Payload Size 64 B">
+                <h2>Benchmark round: Batch Size 10 TpS 50 Payload Size 64 B</h2>
+                <p>Batch Size 10 TpS 50 Payload Size 64 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 50
+    finishingTps: 50
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 50 Payload Size 64 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 50 Payload Size 64 B</td> <td>500</td> <td>0</td> <td>21.5</td> <td>3.24</td> <td>0.36</td> <td>1.15</td> <td>21.0</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 50 Payload Size 64 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>36.1</td> <td>20.75</td> <td>128</td> <td>125</td> <td>3.36</td> <td>1.86</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>36.53</td> <td>19.46</td> <td>124</td> <td>121</td> <td>3.33</td> <td>1.77</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>14.58</td> <td>6.93</td> <td>79.7</td> <td>77.3</td> <td>2.24</td> <td>4.37</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 50 Payload Size 256 B">
+                <h2>Benchmark round: Batch Size 10 TpS 50 Payload Size 256 B</h2>
+                <p>Batch Size 10 TpS 50 Payload Size 256 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 50
+    finishingTps: 50
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 50 Payload Size 256 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 50 Payload Size 256 B</td> <td>500</td> <td>0</td> <td>20.9</td> <td>6.99</td> <td>0.30</td> <td>1.95</td> <td>20.5</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 50 Payload Size 256 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>32.54</td> <td>20.87</td> <td>124</td> <td>124</td> <td>3.73</td> <td>2.11</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>37.73</td> <td>15.7</td> <td>120</td> <td>120</td> <td>3.72</td> <td>2.04</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>74.97</td> <td>15.79</td> <td>84.2</td> <td>82.7</td> <td>2.43</td> <td>4.73</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 50 Payload Size 1024 B">
+                <h2>Benchmark round: Batch Size 10 TpS 50 Payload Size 1024 B</h2>
+                <p>Batch Size 10 TpS 50 Payload Size 1024 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 50
+    finishingTps: 50
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 50 Payload Size 1024 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 50 Payload Size 1024 B</td> <td>500</td> <td>0</td> <td>27.4</td> <td>1.45</td> <td>0.28</td> <td>0.69</td> <td>27.0</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 50 Payload Size 1024 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>46.59</td> <td>21.7</td> <td>126</td> <td>125</td> <td>5.26</td> <td>3.27</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>35.35</td> <td>20.99</td> <td>124</td> <td>123</td> <td>5.24</td> <td>3.18</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>15.15</td> <td>7.76</td> <td>93.8</td> <td>89.2</td> <td>3.17</td> <td>6.22</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 50 Payload Size 4096 B">
+                <h2>Benchmark round: Batch Size 10 TpS 50 Payload Size 4096 B</h2>
+                <p>Batch Size 10 TpS 50 Payload Size 4096 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 50
+    finishingTps: 50
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 50 Payload Size 4096 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 50 Payload Size 4096 B</td> <td>500</td> <td>0</td> <td>26.7</td> <td>3.42</td> <td>0.25</td> <td>1.19</td> <td>26.3</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 50 Payload Size 4096 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>32.67</td> <td>20.65</td> <td>140</td> <td>136</td> <td>11.1</td> <td>7.62</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>33.63</td> <td>20.52</td> <td>129</td> <td>128</td> <td>11.1</td> <td>7.55</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>18.9</td> <td>9.6</td> <td>111</td> <td>104</td> <td>6.13</td> <td>12.1</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 100 Payload Size 64 B">
+                <h2>Benchmark round: Batch Size 10 TpS 100 Payload Size 64 B</h2>
+                <p>Batch Size 10 TpS 100 Payload Size 64 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 100
+    finishingTps: 100
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 100 Payload Size 64 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 100 Payload Size 64 B</td> <td>500</td> <td>0</td> <td>26.4</td> <td>6.20</td> <td>0.88</td> <td>2.67</td> <td>23.6</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 100 Payload Size 64 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>33.7</td> <td>18.52</td> <td>140</td> <td>135</td> <td>3.26</td> <td>1.74</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>42.54</td> <td>20.01</td> <td>129</td> <td>129</td> <td>3.25</td> <td>1.66</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>16.63</td> <td>6.99</td> <td>117</td> <td>114</td> <td>2.20</td> <td>4.34</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 100 Payload Size 256 B">
+                <h2>Benchmark round: Batch Size 10 TpS 100 Payload Size 256 B</h2>
+                <p>Batch Size 10 TpS 100 Payload Size 256 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 100
+    finishingTps: 100
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 100 Payload Size 256 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 100 Payload Size 256 B</td> <td>500</td> <td>0</td> <td>38.5</td> <td>1.11</td> <td>0.27</td> <td>0.66</td> <td>37.7</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 100 Payload Size 256 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>29.97</td> <td>13.42</td> <td>131</td> <td>131</td> <td>3.71</td> <td>2.08</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>31.23</td> <td>20.01</td> <td>128</td> <td>128</td> <td>3.71</td> <td>2.01</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>11.37</td> <td>4.59</td> <td>124</td> <td>121</td> <td>2.40</td> <td>4.73</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 100 Payload Size 1024 B">
+                <h2>Benchmark round: Batch Size 10 TpS 100 Payload Size 1024 B</h2>
+                <p>Batch Size 10 TpS 100 Payload Size 1024 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 100
+    finishingTps: 100
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 100 Payload Size 1024 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 100 Payload Size 1024 B</td> <td>500</td> <td>0</td> <td>31.6</td> <td>6.19</td> <td>0.42</td> <td>2.45</td> <td>27.7</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 100 Payload Size 1024 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>31.86</td> <td>19.06</td> <td>133</td> <td>133</td> <td>5.13</td> <td>3.11</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>32.76</td> <td>19.73</td> <td>131</td> <td>130</td> <td>5.13</td> <td>3.05</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>17.76</td> <td>7.1</td> <td>130</td> <td>107</td> <td>3.13</td> <td>6.18</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="Batch Size 10 TpS 100 Payload Size 4096 B">
+                <h2>Benchmark round: Batch Size 10 TpS 100 Payload Size 4096 B</h2>
+                <p>Batch Size 10 TpS 100 Payload Size 4096 B</p>
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+  type: linear-rate
+  opts:
+    startingTps: 100
+    finishingTps: 100
+</pre>
+                        <h3>Performance metrics for Batch Size 10 TpS 100 Payload Size 4096 B</h3>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                     <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
+                                </tr>
+                                <tr>
+                                     <td>Batch Size 10 TpS 100 Payload Size 4096 B</td> <td>500</td> <td>0</td> <td>35.2</td> <td>3.87</td> <td>0.59</td> <td>2.33</td> <td>32.1</td>
+                                </tr>
+                            </table>
+                        <h3>Resource utilization for Batch Size 10 TpS 100 Payload Size 4096 B</h3>
+                            <h4>Resource monitor: docker</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org1.example.com</td> <td>35.48</td> <td>20.6</td> <td>156</td> <td>145</td> <td>11.0</td> <td>7.53</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;peer0.org2.example.com</td> <td>36.46</td> <td>21.42</td> <td>137</td> <td>134</td> <td>11.0</td> <td>7.45</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>&#x2F;orderer.example.com</td> <td>15.82</td> <td>9.39</td> <td>103</td> <td>97.0</td> <td>6.09</td> <td>12.1</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;">
+                <h2>Test Environment</h2>
+                <h3>benchmark config</h3>
+                <pre id="benchmarkInfo" style="overflow: visible;white-space: pre-wrap;max-height:100%;">name: fabric_test
+description: Benchmark for Fabric Test Network
+workers:
+  number: 1
+rounds:
+  - label: Batch Size 10 TpS 10 Payload Size 64 B
+    description: Batch Size 10 TpS 10 Payload Size 64 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 10
+        finishingTps: 10
+    workload:
+      module: workload-64.js
+  - label: Batch Size 10 TpS 10 Payload Size 256 B
+    description: Batch Size 10 TpS 10 Payload Size 256 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 10
+        finishingTps: 10
+    workload:
+      module: workload-256.js
+  - label: Batch Size 10 TpS 10 Payload Size 1024 B
+    description: Batch Size 10 TpS 10 Payload Size 1024 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 10
+        finishingTps: 10
+    workload:
+      module: workload-1024.js
+  - label: Batch Size 10 TpS 10 Payload Size 4096 B
+    description: Batch Size 10 TpS 10 Payload Size 4096 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 10
+        finishingTps: 10
+    workload:
+      module: workload-4096.js
+  - label: Batch Size 10 TpS 50 Payload Size 64 B
+    description: Batch Size 10 TpS 50 Payload Size 64 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 50
+        finishingTps: 50
+    workload:
+      module: workload-64-2.js
+  - label: Batch Size 10 TpS 50 Payload Size 256 B
+    description: Batch Size 10 TpS 50 Payload Size 256 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 50
+        finishingTps: 50
+    workload:
+      module: workload-256-2.js
+  - label: Batch Size 10 TpS 50 Payload Size 1024 B
+    description: Batch Size 10 TpS 50 Payload Size 1024 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 50
+        finishingTps: 50
+    workload:
+      module: workload-1024-2.js
+  - label: Batch Size 10 TpS 50 Payload Size 4096 B
+    description: Batch Size 10 TpS 50 Payload Size 4096 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 50
+        finishingTps: 50
+    workload:
+      module: workload-4096-2.js
+  - label: Batch Size 10 TpS 100 Payload Size 64 B
+    description: Batch Size 10 TpS 100 Payload Size 64 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 100
+        finishingTps: 100
+    workload:
+      module: workload-64-3.js
+  - label: Batch Size 10 TpS 100 Payload Size 256 B
+    description: Batch Size 10 TpS 100 Payload Size 256 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 100
+        finishingTps: 100
+    workload:
+      module: workload-256-3.js
+  - label: Batch Size 10 TpS 100 Payload Size 1024 B
+    description: Batch Size 10 TpS 100 Payload Size 1024 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 100
+        finishingTps: 100
+    workload:
+      module: workload-1024-3.js
+  - label: Batch Size 10 TpS 100 Payload Size 4096 B
+    description: Batch Size 10 TpS 100 Payload Size 4096 B
+    txNumber: 500
+    rateControl:
+      type: linear-rate
+      opts:
+        startingTps: 100
+        finishingTps: 100
+    workload:
+      module: workload-4096-3.js
+</pre>
+                <h3>SUT</h3>
+                <pre id="sutdetails">not provided</pre>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
